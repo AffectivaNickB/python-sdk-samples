@@ -8,7 +8,7 @@ from collections import defaultdict
 import affvisionpy as af
 import cv2 as cv2
 import math
-from urrllib.parse import urlparse
+from urllib.parse import urlparse
 
 
 
