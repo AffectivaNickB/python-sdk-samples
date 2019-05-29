@@ -8,6 +8,9 @@ from collections import defaultdict
 import affvisionpy as af
 import cv2 as cv2
 import math
+from urrllib.parse import urlparse
+
+
 
 # Constants
 NOT_A_NUMBER = 'NaN'
@@ -60,6 +63,12 @@ class Listener(af.ImageListener):
         print("cfps: " + str(round(capture_fps, 0)))
         capture_last_ts = image.timestamp()
 
+def is_url(x):
+    try:
+        result = urlparse(x)
+        return all([result.scheme, result.netloc, result.path])
+    except:
+        return False
 
 def get_command_line_parameters(args):
     """read parameters entered on the command line.
@@ -76,7 +85,7 @@ def get_command_line_parameters(args):
         """
     if not args.video is None:
         input_file = args.video
-        if not os.path.isfile(input_file):
+        if not os.path.isfile(input_file) and not is_url(input_file):
             raise ValueError("Please provide a valid input video file")
     else:
         input_file = int(args.camera)
