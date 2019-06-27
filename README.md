@@ -13,7 +13,7 @@ This script demonstrates how to use Affectiva's affvisionpy module to process fr
 
 1. usage:
 
-        python3 affvisionpy-sample.py [-h] -d DATA [-v VIDEO] [-n NUM_FACES] [-c [CAMERA]] [-o OUTPUT] [-f FILE] [-r WIDTH HEIGHT]
+        python3 affvisionpy-sample.py [-h] -d DATA [-i VIDEO] [-n NUM_FACES] [-c [CAMERA]] [-o OUTPUT] [-f FILE] [-r WIDTH HEIGHT]
 
         required arguments:
             -d DATA, --data DATA  path to directory containing the models
@@ -22,7 +22,7 @@ This script demonstrates how to use Affectiva's affvisionpy module to process fr
 
           -h, --help    show this help message and exit
 
-          -v VIDEO, --video VIDEO    path to input video file
+          -i VIDEO, --input VIDEO    path to input video file
                        
 
           -n NUM_FACES, --num_faces NUM_FACES    number of faces to identify in the frame
