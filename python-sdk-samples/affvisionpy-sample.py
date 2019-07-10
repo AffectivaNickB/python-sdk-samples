@@ -21,6 +21,7 @@ DECIMAL_ROUNDING_FACTOR = 2
 DEFAULT_FRAME_WIDTH = 1280
 DEFAULT_FRAME_HEIGHT = 720
 DEFAULT_FILE_NAME = "default"
+DATA_DIR_ENV_VAR = "AFFECTIVA_VISION_DATA_DIR"
 
 #Argparse Variable Constants
 WIDTH = 0
@@ -107,6 +108,11 @@ def get_command_line_parameters(args):
     else:
         input_file = int(args.camera)
     data = args.data
+    if not data:
+        data = os.environ.get(DATA_DIR_ENV_VAR)
+        if data == None:
+            raise ValueError("Data directory not specified via command line or env var")
+        print("Using value ", data, " from env var", DATA_DIR_ENV_VAR)
     if not os.path.isdir(data):
         raise ValueError("Please check your data directory path")
     max_num_of_faces = int(args.num_faces)
@@ -631,7 +637,7 @@ def parse_command_line():
     parser = argparse.ArgumentParser(description="Sample code for demoing affvisionpy module on webcam or a saved video file.\n \
         By default, the program will run with the camera parameter displaying frames of size 1280 x 720.\n \
         A CSV file will also be written by default with the filename 'default.csv'. ")
-    parser.add_argument("-d", "--data", dest="data", required=True, help="path to directory containing the models")
+    parser.add_argument("-d", "--data", dest="data", required=False, help="path to directory containing the models")
     parser.add_argument("-i", "--input", dest="video", required=False,
                         help="path to input video file")
     parser.add_argument("-n", "--num_faces", dest="num_faces", required=False, default=1,
