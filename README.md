@@ -16,31 +16,31 @@ This script demonstrates how to use Affectiva's affvisionpy module to process fr
         python3 affvisionpy-sample.py [-h] -d DATA [-i VIDEO] [-n NUM_FACES] [-c [CAMERA]] [-o OUTPUT] [-f FILE] [-r WIDTH HEIGHT]
 
         required arguments:
-            -d DATA, --data DATA  path to directory containing the models
-        
+            -d DATA, --data DATA  path to directory containing the models. Alternatively specify path via the environment variable AFFECTIVA_VISION_DATA_DIR=/path/to/data/vision
+
         optional arguments:
 
           -h, --help    show this help message and exit
 
           -i VIDEO, --input VIDEO    path to input video file
-                       
+
 
           -n NUM_FACES, --num_faces NUM_FACES    number of faces to identify in the frame
-                        
+
 
           -o OUTPUT, --output OUTPUT    enable this parameter to save the output video in a AVI file of your choice
-                        
+
 
           -f FILE, --file FILE    enable this parameter to save the output metrics in a CSV file of your choice
-                        
+
 
           -c [CAMERA], --camera [CAMERA]    enable this parameter to take input from the webcam and provide a camera id for the webcam
-                        
+
 
           -r --resolution WIDTH HEIGHT   set the resolution in pixels (width, height) for the webcam. Defaults to 1280 x 720 resolution.
-          
-    **Note**: if only the data argument is supplied, the script defaults the run to a webcam and 1 face detection, displaying frames 
-    at default size of 1280 x 720. Only certain standard frame sizes are supported. For any unsupported frame sizes, the webcam frame 
+
+    **Note**: if only the data argument is supplied, the script defaults the run to a webcam and 1 face detection, displaying frames
+    at default size of 1280 x 720. Only certain standard frame sizes are supported. For any unsupported frame sizes, the webcam frame
     size defaults to 1280 x 720. If any other configuration is required, it can be done using optional arguments.
 
 
@@ -54,24 +54,24 @@ This script demonstrates how to use Affectiva's affvisionpy module to process fr
     i. Command to run the script with webcam:
 
             python3 affvisionpy-sample.py -d <path/to/data/directory> -c <camera_id> -n <num_of_faces_to_detect>
-            
+
        **Note:** If the camera id is not supplied, by default the camera_id is set to 0.
 
     ii. Command to run the script with a video file:
 
             python3 affvisionpy-sample.py -d <path/to/data/directory> -n <num_of_faces_to_detect> -v </path/to/video/file>
 
-    
+
     iii. Command to run the script with a webcam and save the CSV file to a filename of your choice:
-    
-         python3 affvisionpy-sample.py -d <path/to/data/directory> -c <camera_id> -n <num_of_faces_to_detect> -f <filename> 
-    
-    iv. Command to run the script with a video file and save output video AVI file to a filename of your choice: 
-    
+
+         python3 affvisionpy-sample.py -d <path/to/data/directory> -c <camera_id> -n <num_of_faces_to_detect> -f <filename>
+
+    iv. Command to run the script with a video file and save output video AVI file to a filename of your choice:
+
          python3 affvisionpy-sample.py -d <path/to/data/directory> -n <num_of_faces_to_detect> -v </path/to/video/file> -o <filename>
-    
+
     v. Command to run the script with a webcam and save the CSV file and output video AVI file to filenames of your choice:
-    
+
         python3 affvisionpy-sample.py -d <path/to/data/directory> -n <num_of_faces_to_detect> -v </path/to/video/file> -o <filename> -f <filename>
 
 
@@ -81,6 +81,6 @@ This script demonstrates how to use Affectiva's affvisionpy module to process fr
 
 6.  For both video and webcam options, the script displays real-time metrics on the screen.
 
-7.  To get the output metrics in a file of your choice, give the name of the file with -f on the command line. If a CSV file is desired for the webcam option, the -f flag must be supplied. 
+7.  To get the output metrics in a file of your choice, give the name of the file with -f on the command line. If a CSV file is desired for the webcam option, the -f flag must be supplied.
 
 8.  To get the output video, use the option -o along with the output file name.
