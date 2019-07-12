@@ -1,6 +1,7 @@
 # !/usr/bin/env python3.5
 import argparse
 import csv
+import sys
 import os
 import time
 from collections import defaultdict
@@ -21,6 +22,7 @@ DECIMAL_ROUNDING_FACTOR = 2
 DEFAULT_FRAME_WIDTH = 1280
 DEFAULT_FRAME_HEIGHT = 720
 DEFAULT_FILE_NAME = "default"
+DATA_DIR_ENV_VAR = "AFFECTIVA_VISION_DATA_DIR"
 
 #Argparse Variable Constants
 WIDTH = 0
@@ -86,7 +88,7 @@ class Listener(af.ImageListener):
 
 
 
-def get_command_line_parameters(args):
+def get_command_line_parameters(parser, args):
     """
     read parameters entered on the command line.
 
@@ -107,8 +109,17 @@ def get_command_line_parameters(args):
     else:
         input_file = int(args.camera)
     data = args.data
+    if not data:
+        data = os.environ.get(DATA_DIR_ENV_VAR)
+        if data == None:
+            print("ERROR: Data directory not specified via command line or env var:", DATA_DIR_ENV_VAR, "\n")
+            parser.print_help()
+            sys.exit(1)
+        print("Using value", data, "from env var", DATA_DIR_ENV_VAR)
     if not os.path.isdir(data):
-        raise ValueError("Please check your data directory path")
+        print("ERROR: Please check your data directory path\n")
+        parser.print_help()
+        sys.exit(1)
     max_num_of_faces = int(args.num_faces)
     output_file = args.output
     csv_file = args.file
@@ -419,8 +430,8 @@ def run(csv_data):
         csv_data: list
             Values to hold for each frame
     """
-    args = parse_command_line()
-    input_file, data, max_num_of_faces, csv_file, output_file, frame_width, frame_height = get_command_line_parameters(args)
+    parser, args = parse_command_line()
+    input_file, data, max_num_of_faces, csv_file, output_file, frame_width, frame_height = get_command_line_parameters(parser, args)
     if isinstance(input_file, int):
         start_time = time.time()
     detector = af.SyncFrameDetector(data, max_num_of_faces)
@@ -629,9 +640,9 @@ def parse_command_line():
     args: argparse object of the command line
     """
     parser = argparse.ArgumentParser(description="Sample code for demoing affvisionpy module on webcam or a saved video file.\n \
-        By default, the program will run with the camera parameter displaying frames of size 1280 x 720.\n \
-        A CSV file will also be written by default with the filename 'default.csv'. ")
-    parser.add_argument("-d", "--data", dest="data", required=True, help="path to directory containing the models")
+        By default, the program will run with the camera parameter displaying frames of size 1280 x 720.\n")
+    parser.add_argument("-d", "--data", dest="data", required=False, help="path to directory containing the models. \
+                        Alternatively, specify the path via the environment variable " + DATA_DIR_ENV_VAR + "=/path/to/data")
     parser.add_argument("-i", "--input", dest="video", required=False,
                         help="path to input video file")
     parser.add_argument("-n", "--num_faces", dest="num_faces", required=False, default=1,
@@ -644,7 +655,7 @@ def parse_command_line():
                         help="name of the output CSV file")
     parser.add_argument("-r", "--resolution", dest='res', metavar=('width', 'height'), nargs=2, default=[1280, 720], help="resolution in pixels (2-values): width height")
     args = parser.parse_args()
-    return args
+    return parser, args
 
 
 
