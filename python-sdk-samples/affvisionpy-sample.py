@@ -642,7 +642,7 @@ def parse_command_line():
     parser = argparse.ArgumentParser(description="Sample code for demoing affvisionpy module on webcam or a saved video file.\n \
         By default, the program will run with the camera parameter displaying frames of size 1280 x 720.\n")
     parser.add_argument("-d", "--data", dest="data", required=False, help="path to directory containing the models. \
-                        Alternatively, specify the path via the environment variable " + DATA_DIR_ENV_VAR + "=/path/to/data")
+                        Alternatively, specify the path via the environment variable " + DATA_DIR_ENV_VAR + "=/path/to/data/vision")
     parser.add_argument("-i", "--input", dest="video", required=False,
                         help="path to input video file")
     parser.add_argument("-n", "--num_faces", dest="num_faces", required=False, default=1,

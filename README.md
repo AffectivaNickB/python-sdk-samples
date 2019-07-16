@@ -53,26 +53,26 @@ This script demonstrates how to use Affectiva's affvisionpy module to process fr
 
     i. Command to run the script with webcam:
 
-            python3 affvisionpy-sample.py -d <path/to/data/directory> -c <camera_id> -n <num_of_faces_to_detect>
+            python3 affvisionpy-sample.py -d </path/to/data/vision> -c <camera_id> -n <num_of_faces_to_detect>
 
        **Note:** If the camera id is not supplied, by default the camera_id is set to 0.
 
     ii. Command to run the script with a video file:
 
-            python3 affvisionpy-sample.py -d <path/to/data/directory> -n <num_of_faces_to_detect> -v </path/to/video/file>
+            python3 affvisionpy-sample.py -d </path/to/data/vision> -n <num_of_faces_to_detect> -i </path/to/video/file>
 
 
     iii. Command to run the script with a webcam and save the CSV file to a filename of your choice:
 
-         python3 affvisionpy-sample.py -d <path/to/data/directory> -c <camera_id> -n <num_of_faces_to_detect> -f <filename>
+         python3 affvisionpy-sample.py -d </path/to/data/vision> -c <camera_id> -n <num_of_faces_to_detect> -f <filename>
 
     iv. Command to run the script with a video file and save output video AVI file to a filename of your choice:
 
-         python3 affvisionpy-sample.py -d <path/to/data/directory> -n <num_of_faces_to_detect> -v </path/to/video/file> -o <filename>
+         python3 affvisionpy-sample.py -d </path/to/data/vision> -n <num_of_faces_to_detect> -i </path/to/video/file> -o <filename>
 
     v. Command to run the script with a webcam and save the CSV file and output video AVI file to filenames of your choice:
 
-        python3 affvisionpy-sample.py -d <path/to/data/directory> -n <num_of_faces_to_detect> -v </path/to/video/file> -o <filename> -f <filename>
+        python3 affvisionpy-sample.py -d </path/to/data/vision> -n <num_of_faces_to_detect> -i </path/to/video/file> -o <filename> -f <filename>
 
 
 ## Additional Notes ##
