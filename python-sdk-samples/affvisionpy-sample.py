@@ -13,7 +13,7 @@ import math
 
 
 # Constants
-NOT_A_NUMBER = 'NaN'
+NOT_A_NUMBER = 'nan'
 count = 0
 TEXT_SIZE = 0.6
 PADDING_FOR_SEPARATOR = 5
