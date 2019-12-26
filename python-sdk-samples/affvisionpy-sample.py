@@ -60,7 +60,11 @@ class Listener(af.ImageListener):
         timestamp = time_metrics_dict['timestamp']
         capture_fps = time_metrics_dict['cfps']
         global count
-        process_fps = 1000.0 / (image.timestamp() - process_last_ts)
+        #avoid div by 0 error on the first frame
+        try:
+            process_fps = 1000.0 / (image.timestamp() - process_last_ts)
+        except:
+            process_fps = 0
         print("timestamp:" + str(round(timestamp, 0)), "Frame " + str(count), "cfps: " + str(round(capture_fps, 0)), "pfps: " + str(round(process_fps, 0)))
         count +=1
         process_last_ts = image.timestamp()
