@@ -470,13 +470,14 @@ def run(csv_data):
     if output_file is not None:
        out = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (file_width, file_height))
     count = 0
+    timestamp = 0
 
     while captureFile.isOpened():
         # Capture frame-by-frame
         ret, frame = captureFile.read()
 
         if ret == True:
-
+            last_timestamp = timestamp
             height = frame.shape[0]
             width = frame.shape[1]
             if isinstance(input_file, int):
@@ -487,7 +488,8 @@ def run(csv_data):
             afframe = af.Frame(width, height, frame, af.ColorFormat.bgr, int(timestamp))
             count += 1
             try:
-                detector.process(afframe)
+                if timestamp>last_timestamp && count > 1: # if there's a problem with the timestamp, don't process the frame
+                    detector.process(afframe)
 
             except Exception as exp:
                 print(exp)
