@@ -492,7 +492,7 @@ def run(csv_data):
             afframe = af.Frame(width, height, frame, af.ColorFormat.bgr, int(timestamp))
             count += 1
             try:
-                if timestamp>last_timestamp && count > 1: # if there's a problem with the timestamp, don't process the frame
+                if timestamp>last_timestamp and count > 0: # if there's a problem with the timestamp, don't process the frame
                     detector.process(afframe)
 
             except Exception as exp:
