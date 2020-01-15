@@ -83,7 +83,7 @@ class Listener(af.ImageListener):
                                                 face.get_bounding_box()[0].y,
                                                 face.get_bounding_box()[1].x,
                                                 face.get_bounding_box()[1].y,
-                                                face.get_confidence()]
+                                                1.0]
  
     def image_captured(self, image):
         global capture_last_ts
