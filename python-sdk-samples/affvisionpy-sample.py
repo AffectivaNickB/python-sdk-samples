@@ -200,7 +200,6 @@ def get_bounding_box_points(fid):
  
  
 def get_face_points(fid):
-    print(face_points_dict)
     return (
         (int(face_points_dict[fid][0]), int(face_points_dict[fid][1])),
         (int(face_points_dict[fid][2]), int(face_points_dict[fid][3])),
