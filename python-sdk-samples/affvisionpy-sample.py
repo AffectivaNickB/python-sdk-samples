@@ -7,7 +7,7 @@ import time
 from collections import defaultdict
  
 import affvisionpy as af
-import cv2 as cv2
+import cv2
 import math
  
  
@@ -33,8 +33,8 @@ capture_last_ts = 0.0
  
  
  
-header_row = ['TimeStamp', 'faceId', 'upperLeftX', 'upperLeftY', 'lowerRightX', 'lowerRightY', 'confidence', 'interocular_distance',
-        'pitch', 'yaw', 'roll', 'joy', 'anger', 'surprise', 'valence', 'fear', 'sadness', 'disgust', 'neutral', 'smile',
+header_row = ['TimeStamp', 'faceId', 'outer_left_eye', 'outer_right_eye', 'nose_tip', 'chin_tip', 'upperLeftX', 'upperLeftY', 'lowerRightX', 'lowerRightY', 'confidence', 'interocular_distance',
+        'pitch', 'yaw', 'roll', 'joy', 'anger', 'surprise', 'valence', 'fear', 'sadness', 'disgust', 'contempt', 'neutral', 'smile',
         'brow_raise', 'brow_furrow', 'nose_wrinkle', 'upper_lip_raise', 'mouth_open', 'eye_closure', 'cheek_raise', 'yawn',
         'blink', 'blink_rate', 'eye_widen', 'inner_brow_raise', 'lip_corner_depressor'
         ]
@@ -45,6 +45,7 @@ emotions_dict = defaultdict()
 bounding_box_dict = defaultdict()
 time_metrics_dict = defaultdict()
 num_faces = defaultdict()
+face_points_dict = defaultdict()
  
  
  
@@ -83,7 +84,18 @@ class Listener(af.ImageListener):
                                                 face.get_bounding_box()[0].y,
                                                 face.get_bounding_box()[1].x,
                                                 face.get_bounding_box()[1].y,
-                                                1.0]
+                                                face.get_confidence()]
+ 
+            face_points_dict[face.get_id()] = [
+                face.get_face_points()[af.FacePoint.outer_right_eye].x,
+                face.get_face_points()[af.FacePoint.outer_right_eye].y,
+                face.get_face_points()[af.FacePoint.outer_left_eye].x,
+                face.get_face_points()[af.FacePoint.outer_left_eye].y,
+                face.get_face_points()[af.FacePoint.nose_tip].x,
+                face.get_face_points()[af.FacePoint.nose_tip].y,
+                face.get_face_points()[af.FacePoint.chin_tip].x,
+                face.get_face_points()[af.FacePoint.chin_tip].y,
+           ]
  
     def image_captured(self, image):
         global capture_last_ts
@@ -163,11 +175,13 @@ def draw_bounding_box(frame):
         else:
             cv2.rectangle(frame, (upper_left_x, upper_left_y), (lower_right_x, lower_right_y), (21, 169, 167), 3)
  
- 
+        face_points = get_face_points(fid)
+        for point in face_points:
+            cv2.circle(frame, point, 3, (255, 0, 255), -1)
  
 def get_bounding_box_points(fid):
     """
-    Fetch upper_left_x, upper_left_y, lower_right_x, lwoer_right_y points of the bounding box.
+    Fetch upper_left_x, upper_left_y, lower_right_x, lower_right_y points of the bounding box.
  
         Parameters
         ----------
@@ -185,6 +199,14 @@ def get_bounding_box_points(fid):
             int(bounding_box_dict[fid][3]))
  
  
+def get_face_points(fid):
+    print(face_points_dict)
+    return (
+        (int(face_points_dict[fid][0]), int(face_points_dict[fid][1])),
+        (int(face_points_dict[fid][2]), int(face_points_dict[fid][3])),
+        (int(face_points_dict[fid][4]), int(face_points_dict[fid][5])),
+        (int(face_points_dict[fid][6]), int(face_points_dict[fid][7])),
+    )
  
 def roundup(num):
     """
@@ -553,6 +575,7 @@ def clear_all_dictionaries():
     emotions_dict.clear()
     expressions_dict.clear()
     measurements_dict.clear()
+    face_points_dict.clear()
  
  
  
@@ -637,6 +660,11 @@ def write_metrics_to_csv_data_list(csv_data, timestamp):
             current_frame_data["upperLeftY"] = upperLeftY
             current_frame_data["lowerRightX"] = lowerRightX
             current_frame_data["lowerRightY"] = lowerRightY
+            outer_right_eye, outer_left_eye, nose_tip, chin_tip = get_face_points(fid)
+            current_frame_data["outer_right_eye"] = outer_right_eye
+            current_frame_data["outer_left_eye"] = outer_left_eye
+            current_frame_data["nose_tip"] = nose_tip 
+            current_frame_data["chin_tip"] = chin_tip
             for key,val in measurements_dict[fid].items():
                 current_frame_data[str(key).split('.')[1]] = round(val,4)
             for key,val in emotions_dict[fid].items():
