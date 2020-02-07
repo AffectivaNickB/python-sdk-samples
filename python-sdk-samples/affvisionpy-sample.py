@@ -46,6 +46,7 @@ bounding_box_dict = defaultdict()
 time_metrics_dict = defaultdict()
 num_faces = defaultdict()
 face_points_dict = defaultdict()
+drowsiness_dict=defaultdict()
  
  
  
@@ -73,6 +74,7 @@ class Listener(af.ImageListener):
         self.faces = faces
         global num_faces
         num_faces = faces
+        #print(faces[0].get_drowsiness().drowsiness)
         for fid, face in faces.items():
             measurements_dict[face.get_id()] = defaultdict()
             expressions_dict[face.get_id()] = defaultdict()
@@ -80,6 +82,8 @@ class Listener(af.ImageListener):
             measurements_dict[face.get_id()].update(face.get_measurements())
             expressions_dict[face.get_id()].update(face.get_expressions())
             emotions_dict[face.get_id()].update(face.get_emotions())
+            drowsiness_dict[face.get_id()].update(face.get_drowsiness())
+            
             bounding_box_dict[face.get_id()] = [face.get_bounding_box()[0].x,
                                                 face.get_bounding_box()[0].y,
                                                 face.get_bounding_box()[1].x,
@@ -284,7 +288,39 @@ def display_measurements_on_screen(key, val, upper_left_y, frame, x1):
                 cv2.FONT_HERSHEY_SIMPLEX, TEXT_SIZE,
                 (255, 255, 255))
  
+def display_drowsiness_on_screen(key, val, upper_left_y, frame, x1):
+    """
+    Display the measurement metrics on screen.
  
+       Parameters
+       ----------
+       key: str
+           Name of the measurement.
+       val: str
+           Value of the measurement.
+       upper_left_y: int
+           the upper_left_y co-ordinate of the bounding box
+       frame: affvisionpy.Frame
+           Frame object to write the measurement on
+       x1: upper_left_x co-ordinate of the bounding box whose measurements need to be written
+ 
+    """
+    key = str(key)
+    padding = 20
+    key_name = key.split(".")[1]
+    key_text_width, key_text_height = get_text_size(key_name, cv2.FONT_HERSHEY_SIMPLEX, 1)
+    val_text = val
+    val_text_width, val_text_height = get_text_size(val_text, cv2.FONT_HERSHEY_SIMPLEX, 1)
+ 
+    key_val_width = key_text_width + val_text_width
+ 
+    cv2.putText(frame, key_name + ": ", (abs(x1 - key_val_width - PADDING_FOR_SEPARATOR), upper_left_y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                TEXT_SIZE,
+                (255, 255, 255))
+    cv2.putText(frame, val_text, (abs(x1 - val_text_width), upper_left_y),
+                cv2.FONT_HERSHEY_SIMPLEX, TEXT_SIZE,
+                (255, 255, 255)) 
  
 def display_emotions_on_screen(key, val, upper_left_y, frame, x1):
     """
@@ -428,6 +464,8 @@ def write_metrics(frame):
         measurements = measurements_dict[fid]
         expressions = expressions_dict[fid]
         emotions = emotions_dict[fid]
+        drowsiness_level=drowsiness_dict[fid]
+
         upper_left_x, upper_left_y, lower_right_x, lower_right_y = get_bounding_box_points(fid)
         box_height = lower_right_y - upper_left_y
         box_width = lower_right_x - upper_left_x
@@ -438,7 +476,13 @@ def write_metrics(frame):
             display_measurements_on_screen(key, val, upper_left_y, frame, upper_left_x)
  
             upper_left_y += 25
+        
+        for key, val in drowsiness_level.items():
+            print(key,val)
+            display_drowsiness_on_screen(key, val, upper_left_y, frame, upper_left_x)
  
+            upper_left_y += 25
+        
         for key, val in emotions.items():
             display_emotions_on_screen(key, val, upper_left_y, frame, upper_left_x)
             upper_left_y += 25
